@@ -1,15 +1,22 @@
-KEY=keys/key.pem
+KEYDIR=keys
+KEY=$(KEYDIR)/key.pem
 SNAKEOIL=tools/tls_key_params.txt
-
+TARGET=sacapi
+RM=rm -rf
 .PHONY: install all clean
 
 
-all: main.go $(KEY)
-	go get
-	go build
+all: $(TARGET) $(KEY)
 
 $(KEY): $(SNAKEOIL)
 	tools/create_test_cert.sh < $< 
 
+$(TARGET): main.go
+	go get
+	go build
+
 clean:
-	rm -rf sacapi
+	$(RM) $(TARGET)
+
+mrproper: clean
+	$(RM) $(KEYDIR)
