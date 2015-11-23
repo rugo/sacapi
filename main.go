@@ -28,5 +28,5 @@ func main() {
     }
     api.SetApp(router)
     apilog.Init()
-    log.Fatal(http.ListenAndServeTLS(":8080", "keys/cert.pem", "keys/key.pem", api.MakeHandler()))
+    log.Fatal(http.ListenAndServeTLS(":1443", "keys/cert.pem", "keys/key.pem", api.MakeHandler()))
 }
