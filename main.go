@@ -21,7 +21,7 @@ func main() {
             Realm: "Smart Alarm Clock REST API",
             Authenticator: auth.AuthenticateByFile})
     router, err := rest.MakeRouter(
-        rest.Get("/test", view.GetJSONMessage),
+        rest.Get("/test/:time", view.GetJSONMessage),
     )
     if err != nil {
         log.Fatal(err)
