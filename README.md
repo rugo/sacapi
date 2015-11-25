@@ -2,6 +2,7 @@ SACAPI
 ======
 
 This is a API middleware for a smart alarm clock.
+
 It connects calendar APIs (google calendar so far)
 to google maps and provides calculated data via
 a REST json API.
@@ -27,5 +28,6 @@ To set the service up just run
 
     make
 
-in this direcrtory. This also creates a snakeoil cert/key 
-pair, so you're ready to play around with it.
+in this direcrtory.
+
+This also creates a snakeoil cert/key  pair, so you're ready to play around with it.
