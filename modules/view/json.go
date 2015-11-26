@@ -3,6 +3,8 @@ import (
     "github.com/ant0ine/go-json-rest/rest"
     "github.com/rugo/sacapi/modules/data"
     "strconv"
+    "golang.org/x/net/context"
+    "github.com/rugo/sacapi/modules/calcom"
 )
 
 func GetJSONMessage(w rest.ResponseWriter, r *rest.Request) {
@@ -22,4 +24,18 @@ func GetJSONMessage(w rest.ResponseWriter, r *rest.Request) {
     }
     w.Header().Set("Content-Type", "application/json; charset=utf-8")
     w.WriteJson(t)
+}
+
+func GetNextCalendarEntry(w rest.ResponseWriter, r *rest.Request) {
+    ctx := context.Background()
+    deviceId := r.PathParam("deviceId")
+    nextEntry, err := calcom.GetNextGoogleCalendarEntry(ctx, deviceId)
+
+    if err != nil {
+        rest.Error(w, "Could not read calendar entries", 500)
+        return
+    }
+
+    w.Header().Set("Content-Type", "application/json; charset=utf-8")
+    w.WriteJson(nextEntry)
 }

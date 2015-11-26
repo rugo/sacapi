@@ -10,6 +10,8 @@ import (
     "encoding/base64"
     "golang.org/x/oauth2"
     "encoding/json"
+    "github.com/ant0ine/go-json-rest/rest"
+    "strings"
 )
 
 var (
@@ -30,6 +32,13 @@ func AuthenticateByFile(deviceId, secret string) bool {
         return true
     }
     Log.Info("Auth for device %s failed due to bad secret", deviceId)
+    return false
+}
+
+func AuthorizeRequest(deviceId string, request *rest.Request) bool {
+    if request.URL.Path == "/calendar/next/" + deviceId || strings.HasSuffix(request.URL.Path, "/test") {
+        return true
+    }
     return false
 }
 

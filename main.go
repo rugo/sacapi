@@ -19,9 +19,11 @@ func main() {
     api.Use(
         &rest.AuthBasicMiddleware{
             Realm: "Smart Alarm Clock REST API",
-            Authenticator: auth.AuthenticateByFile})
+            Authenticator: auth.AuthenticateByFile,
+            Authorizator: auth.AuthorizeRequest})
     router, err := rest.MakeRouter(
         rest.Get("/test/:time", view.GetJSONMessage),
+        rest.Get("/calendar/next/:id", view.GetNextCalendarEntry),
     )
     if err != nil {
         log.Fatal(err)
