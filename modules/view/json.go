@@ -28,7 +28,7 @@ func GetJSONMessage(w rest.ResponseWriter, r *rest.Request) {
 
 func GetNextCalendarEntry(w rest.ResponseWriter, r *rest.Request) {
     ctx := context.Background()
-    deviceId := r.PathParam("deviceId")
+    deviceId := r.PathParam("id")
     nextEntry, err := calcom.GetNextGoogleCalendarEntry(ctx, deviceId)
 
     if err != nil {
