@@ -75,6 +75,7 @@ func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
             Log.Error("Could not save token for device %s", deviceId)
         }
         Log.Info("Saved token for device %s", deviceId)
+        w.Write([]byte("You registered succefully"))
     }
 }
 
