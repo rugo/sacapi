@@ -23,17 +23,3 @@ func GetJSONMessage(w rest.ResponseWriter, r *rest.Request) {
     w.Header().Set("Content-Type", "application/json; charset=utf-8")
     w.WriteJson(t)
 }
-
-/*
-
-*/
-func RegisterDevice(w rest.ResponseWriter, r *rest.Request) {
-    content := &RegisterDeviceRequest{}
-    err := r.DecodeJsonPayload(&content)
-    if err != nil {
-        rest.Error(w, "Invalid request", 400)
-        return
-    }
-    context := context.Background()
-    calendar.Register(ctx, content)
-}
