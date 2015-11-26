@@ -1,3 +1,4 @@
 keys/
 .idea/
 *.iml
+google_api_secret.json
