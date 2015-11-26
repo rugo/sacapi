@@ -26,7 +26,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
     secret := r.PostFormValue("secret")
 
     if len(deviceId) < auth.MIN_LEN_DEVICE_ID || len(secret) < auth.MIN_LEN_SECRET {
-        respondBadRequest(w, "Arguments have to wrong format")
+        respondBadRequest(w, "Arguments have the wrong format")
         return
     }
 
@@ -55,8 +55,11 @@ func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
         respondBadRequest(w, "You need to register first.")
     }
 
+
     deviceId := deviceIdC.Value
     secretb64 := secretb64C.Value
+
+    Log.Info("Received Callbackrequest for device %s", deviceId)
 
     if auth.DeviceIdExists(deviceId) && auth.CheckHashedSecret(deviceId, secretb64) {
         Log.Info("Received callback for device %s", deviceId)

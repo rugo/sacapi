@@ -65,6 +65,7 @@ func CheckSecret(deviceId, secret string) bool {
 
 func CheckHashedSecret(deviceId, secretb64 string) bool {
     storedSecret, err := getHashedDeviceSecret(deviceId)
+
     if storedSecret == secretb64 && err == nil {
         return true
     }
