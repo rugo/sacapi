@@ -74,6 +74,7 @@ func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
         if err != nil {
             Log.Error("Could not save token for device %s", deviceId)
         }
+        Log.Info("Saved token for device %s", deviceId)
     }
 }
 
@@ -90,5 +91,5 @@ func main() {
 
     http.HandleFunc("/register", registerHandler)
     http.HandleFunc("/oauth2callback", oauthCallbackHandler)
-    http.ListenAndServe(":8080", nil)
+    Log.Fatal(http.ListenAndServe(":8080", nil))
 }

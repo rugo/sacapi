@@ -47,7 +47,6 @@ func getDeviceTokenPath(deviceId string) string {
 
 func DeviceIdExists(deviceId string) bool {
     if _, err := os.Stat(getDevicePath(deviceId)); os.IsNotExist(err) {
-        Log.Info("Auth failed, deviceId %s not existent", deviceId)
         return false
     }
     return true
