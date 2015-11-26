@@ -54,7 +54,7 @@ func DeviceIdExists(deviceId string) bool {
 
 func getHashedDeviceSecret(deviceId string) (string, error) {
     if content, err := ioutil.ReadFile(getDeviceSecretPath(deviceId)); err == nil {
-        return string(content[:len(content)-1]), nil
+        return string(content), nil
     }
     return "", errors.New("Secret not existent")
 }
