@@ -91,5 +91,5 @@ func main() {
 
     http.HandleFunc("/register", registerHandler)
     http.HandleFunc("/oauth2callback", oauthCallbackHandler)
-    Log.Fatal(http.ListenAndServe(":8080", nil))
+    Log.Fatal(http.ListenAndServe(":2443", nil))
 }
