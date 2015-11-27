@@ -35,7 +35,7 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (data.Cloc
 		return data.ClockInfo{}, err
 	}
 
-	client := oauthConfig.Client(ctx, token)
+	client := oauthConfig.Client(oauth2.NoContext, token)
 	srv, err := calendar.New(client)
 
 	if err != nil {
@@ -47,6 +47,7 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (data.Cloc
 	SingleEvents(true).TimeMin(t).MaxResults(1).OrderBy("startTime").Do()
 	if err != nil {
 		Log.Error("Unable to retrieve next ten of the user's events. %v", err)
+		return data.ClockInfo{}, err
 	}
 
 	if len(events.Items) > 0 {
