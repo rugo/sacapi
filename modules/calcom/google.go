@@ -19,7 +19,7 @@ var (
 func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (data.ClockInfo, error) {
 	/* ToDo: remove test code */
 	// Not to be done in every request, JUST FOR TESTING!!
-	b, err := ioutil.ReadFile("/tmp/google_api_secret.json")
+	b, err := ioutil.ReadFile("/etc/sac/google_api_secret.json")
 	if err != nil {
 		Log.Fatalf("Unable to read client secret file: %v", err)
 	}

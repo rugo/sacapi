@@ -30,5 +30,11 @@ func main() {
     }
     api.SetApp(router)
     apilog.Init()
-    log.Fatal(http.ListenAndServeTLS(":1443", "keys/cert.pem", "keys/key.pem", api.MakeHandler()))
+    log.Fatal(
+        http.ListenAndServeTLS(":1443",
+            "/etc/sac/keys/cert.pem",
+            "/etc/sac/keys/key.pem",
+            api.MakeHandler(),
+        ),
+    )
 }

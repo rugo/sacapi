@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OUTDIR=keys/
+OUTDIR=/etc/sac/keys/
 if [ ! -d "$OUTDIR" ]; then
     mkdir -p ${OUTDIR}
 fi

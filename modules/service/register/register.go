@@ -83,7 +83,7 @@ func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-var keyDir = "../../../keys/"
+var keyDir = "/etc/sac/keys/"
 func main() {
     b, err := ioutil.ReadFile("/tmp/google_api_secret.json")
     if err != nil {
@@ -98,5 +98,5 @@ func main() {
 
     http.HandleFunc("/register", registerHandler)
     http.HandleFunc("/oauth2callback", oauthCallbackHandler)
-    Log.Fatal(http.ListenAndServeTLS(":2443", keyDir + "cert.pem", keyDir + "key.pem", nil))
+    Log.Fatal(http.ListenAndServeTLS(":2    443", keyDir + "cert.pem", keyDir + "key.pem", nil))
 }
