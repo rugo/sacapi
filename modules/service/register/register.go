@@ -68,7 +68,6 @@ func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
         // Exchange for token
         token, err := oauthConfig.Exchange(oauth2.NoContext, code)
-        Log.Error("Refreshtoken: %s", token.RefreshToken)
 
         if err != nil {
             Log.Error("Could not exchange code to token for device %s", )
