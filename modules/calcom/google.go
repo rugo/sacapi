@@ -51,9 +51,16 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (data.Cloc
 
 	if len(events.Items) > 0 {
 		entry := events.Items[0]
+		startTime, err := time.Parse(time.RFC3339, entry.Start.DateTime)
+
+		if err != nil {
+			Log.Error("Could not parse time %s", entry.Start.DateTime)
+			return data.ClockInfo{}, errors.New("Communication error with API")
+		}
+
 		nextEntry := data.ClockInfo{
 			Appointment: data.Appointment{
-				Time: 12345,
+				Time: startTime.Unix(),
 				Name: entry.Summary,
 				Description: entry.Description,
 			},
