@@ -1,7 +1,7 @@
 package data
 
 type Appointment struct {
-    Time int `json:"time"`
+    Time int64 `json:"time"`
     Name string `json:"name"`
     Description string `json:"description"`
 }
