@@ -44,7 +44,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
     }
     http.SetCookie(w, &http.Cookie{Name: "deviceid", Value: deviceId})
     http.SetCookie(w, &http.Cookie{Name: "secret", Value: auth.HashSecret(secret)})
-    http.Redirect(w, r, oauthConfig.AuthCodeURL(""), http.StatusFound)
+    http.Redirect(w, r, oauthConfig.AuthCodeURL("", oauth2.AccessTypeOffline), http.StatusFound)
 }
 
 func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -90,6 +90,7 @@ func main() {
     }
 
     oauthConfig, err = google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
+
     if err != nil {
         Log.Fatalf("Unable to parse client secret file to config: %v", err)
     }
