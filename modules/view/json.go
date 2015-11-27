@@ -8,14 +8,14 @@ import (
 )
 
 func GetJSONMessage(w rest.ResponseWriter, r *rest.Request) {
-    time, err := int64(strconv.Atoi(r.PathParam("time")))
+    time, err := strconv.Atoi(r.PathParam("time"))
     if err != nil {
         rest.Error(w, "Time has to be a number", 400)
         return
     }
     t := data.ClockInfo{
         Appointment: data.Appointment{
-            Time: time,
+            Time: int64(time),
             Name: "Meeting",
             Description: "Nöpe! Chuck Testa!",
         },
