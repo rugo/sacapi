@@ -83,7 +83,7 @@ func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-var keyDir = "../../../keys"
+var keyDir = "../../../keys/"
 func main() {
     b, err := ioutil.ReadFile("/tmp/google_api_secret.json")
     if err != nil {
