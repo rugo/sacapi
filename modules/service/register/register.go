@@ -44,6 +44,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
     }
     http.SetCookie(w, &http.Cookie{Name: "deviceid", Value: deviceId})
     http.SetCookie(w, &http.Cookie{Name: "secret", Value: auth.HashSecret(secret)})
+    // AccessTypeOffline to also retrieve refresh token
     http.Redirect(w, r, oauthConfig.AuthCodeURL("", oauth2.AccessTypeOffline), http.StatusFound)
 }
 
@@ -82,6 +83,7 @@ func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
+var keyDir = "../../../keys"
 func main() {
     b, err := ioutil.ReadFile("/tmp/google_api_secret.json")
     if err != nil {
@@ -96,5 +98,5 @@ func main() {
 
     http.HandleFunc("/register", registerHandler)
     http.HandleFunc("/oauth2callback", oauthCallbackHandler)
-    Log.Fatal(http.ListenAndServe(":2443", nil))
+    Log.Fatal(http.ListenAndServeTLS(":443", keyDir + "cert.pem", keyDir + "key.pem", nil))
 }
