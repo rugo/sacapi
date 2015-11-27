@@ -8,7 +8,7 @@ import (
 )
 
 func GetJSONMessage(w rest.ResponseWriter, r *rest.Request) {
-    time, err := strconv.Atoi(r.PathParam("time"))
+    time, err := int64(strconv.Atoi(r.PathParam("time")))
     if err != nil {
         rest.Error(w, "Time has to be a number", 400)
         return
