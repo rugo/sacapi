@@ -30,4 +30,4 @@ To set the service up just run
 
 in this direcrtory.
 
-This also creates a snakeoil cert/key  pair, so you're ready to play around with it.
+With the tools/create_test_cert.sh you can create a snakeoil cert/key  pair.
