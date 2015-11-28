@@ -14,11 +14,10 @@ import (
 
 var (
 	oauthConfig *oauth2.Config
+
 )
 
-func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (data.ClockInfo, error) {
-	/* ToDo: remove test code */
-	// Not to be done in every request, JUST FOR TESTING!!
+func InitGoogleCalendarApi() {
 	b, err := ioutil.ReadFile("/etc/sac/google_api_secret.json")
 	if err != nil {
 		Log.Fatalf("Unable to read client secret file: %v", err)
@@ -28,11 +27,13 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (data.Cloc
 	if err != nil {
 		Log.Fatalf("Unable to parse client secret file to config: %v", err)
 	}
+}
 
+func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.Context, error) {
 	token, err := auth.LoadToken(deviceId)
 	if err != nil {
 		Log.Error("Could not load token for device %s", deviceId)
-		return data.ClockInfo{}, err
+		return ctx, err
 	}
 
 	client := oauthConfig.Client(oauth2.NoContext, token)
@@ -40,14 +41,15 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (data.Cloc
 
 	if err != nil {
 		Log.Error("Unable to retrieve calendar Client %v", err)
+		return ctx, err
 	}
 
 	t := time.Now().Format(time.RFC3339)
 	events, err := srv.Events.List("primary").ShowDeleted(false).
 	SingleEvents(true).TimeMin(t).MaxResults(1).OrderBy("startTime").Do()
 	if err != nil {
-		Log.Error("Unable to retrieve next ten of the user's events. %v", err)
-		return data.ClockInfo{}, err
+		Log.Error("Unable to retrieve user event. %v", err)
+		return ctx, err
 	}
 
 	if len(events.Items) > 0 {
@@ -56,10 +58,10 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (data.Cloc
 
 		if err != nil {
 			Log.Error("Could not parse time %s", entry.Start.DateTime)
-			return data.ClockInfo{}, errors.New("Communication error with API")
+			return ctx, ErrCommunicationError
 		}
 
-		nextEntry := data.ClockInfo{
+		NewContext(ctx,  data.ClockInfoPackage{
 			Appointment: data.Appointment{
 				Time: startTime.Unix(),
 				Name: entry.Summary,
@@ -67,12 +69,9 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (data.Cloc
 			},
 			Timezone: events.TimeZone,
 			Apivers: 0,
-		}
-		return nextEntry, nil
+		})
+		return ctx, nil
 	} else {
-		errMsg := "Device %s user has no appointments."
-		Log.Error(errMsg, deviceId)
-		return data.ClockInfo{}, errors.New(errMsg)
+		return ctx, ErrNoAppointments
 	}
-
 }

@@ -6,7 +6,7 @@ type Appointment struct {
     Description string `json:"description"`
 }
 
-type ClockInfo struct {
+type ClockInfoPackage struct {
     Appointment Appointment `json:"appointment"`
     Timezone string `json:"timezone"`
     Apivers int `json:"apivers"`

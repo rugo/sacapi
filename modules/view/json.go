@@ -7,13 +7,17 @@ import (
     "github.com/rugo/sacapi/modules/calcom"
 )
 
+const (
+    CONTENT_TYPE = "application/json; charset=utf-8"
+    ERROR_CODE = 500 /* always return 500 if smth goes wrong here */
+)
 func GetJSONMessage(w rest.ResponseWriter, r *rest.Request) {
     time, err := strconv.Atoi(r.PathParam("time"))
     if err != nil {
         rest.Error(w, "Time has to be a number", 400)
         return
     }
-    t := data.ClockInfo{
+    t := data.ClockInfoPackage{
         Appointment: data.Appointment{
             Time: int64(time),
             Name: "Meeting",
@@ -29,13 +33,20 @@ func GetJSONMessage(w rest.ResponseWriter, r *rest.Request) {
 func GetNextCalendarEntry(w rest.ResponseWriter, r *rest.Request) {
     ctx := context.Background()
     deviceId := r.PathParam("id")
-    nextEntry, err := calcom.GetNextGoogleCalendarEntry(ctx, deviceId)
+    ctx, err := calcom.GetNextGoogleCalendarEntry(ctx, deviceId)
 
     if err != nil {
-        rest.Error(w, "Could not read calendar entries", 500)
+        rest.Error(w, "Could not read calendar entries", ERROR_CODE)
         return
     }
 
-    w.Header().Set("Content-Type", "application/json; charset=utf-8")
-    w.WriteJson(nextEntry)
+    answer, err := calcom.FromContext(ctx)
+
+    if err != nil {
+        /* should never be reached */
+        rest.Error(w, "Could not access next calendar entry", ERROR_CODE)
+    }
+
+    w.Header().Set("Content-Type", CONTENT_TYPE)
+    w.WriteJson(answer)
 }
