@@ -1,12 +1,15 @@
 SOURCE=$(wildcard *.go)
-TARGET=calendar
+TARGET=saccalendar
 
-.PHONY=all clean
+.PHONY=all install clean
 
 all: $(TARGET)
 
 $(TARGET): $(SOURCE)
 	go build
+
+install: $(SOURCE)
+	go install
 
 clean:
 	$(RM) $(TARGET)
