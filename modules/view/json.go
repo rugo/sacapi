@@ -52,6 +52,7 @@ func GetNextCalendarEntry(w rest.ResponseWriter, r *rest.Request) {
     if !ok {
         /* should never be reached */
         rest.Error(w, "Could not access next calendar entry", ERROR_CODE)
+        return
     }
 
     w.Header().Set("Content-Type", CONTENT_TYPE)

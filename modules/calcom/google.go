@@ -62,7 +62,7 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 			return ctx, ErrCommunicationError
 		}
 
-		NewContext(ctx,  data.ClockInfoPackage{
+		ctx = NewContext(ctx,  data.ClockInfoPackage{
 			Appointment: data.Appointment{
 				Time: startTime.Unix(),
 				Name: entry.Summary,
