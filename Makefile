@@ -1,19 +1,12 @@
 MODULES=sacregister saccalendar
 BINDIR=modules/service
 RM=rm -rf
-.PHONY: all clean keys
+.PHONY: all clean install keys
 
-all:
-	 for dir in $(MODULES); do \
-	  $(MAKE) -C $(BINDIR)/$$dir; \
-     done
-
-install:
+all clean install:
 	for dir in $(MODULES); do \
-    	  $(MAKE) -C $(BINDIR)/$$dir $@; \
-    done
+	    $(MAKE) -C $(BINDIR)/$$dir $@; \
+	done
 
-clean:
-	for dir in $(MODULES); do \
-    	  $(MAKE) -C $(BINDIR)/$$dir $@; \
-    done
+keys:
+	tools/create_test_cert.sh < tools/tls_key_params.txt
