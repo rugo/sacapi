@@ -15,7 +15,7 @@ var (
 	oauthConfig *oauth2.Config
 )
 
-func InitGoogleCalendarApi() {
+func initGoogleCalendarApi() {
 	b, err := ioutil.ReadFile("/etc/sac/google_api_secret.json")
 	if err != nil {
 		Log.Fatalf("Unable to read client secret file: %v", err)

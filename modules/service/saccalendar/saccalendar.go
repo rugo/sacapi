@@ -7,6 +7,7 @@ import (
     "github.com/rugo/sacapi/modules/apilog"
     "log"
     "net/http"
+    "github.com/rugo/sacapi/modules/calcom"
 )
 
 
@@ -30,6 +31,7 @@ func main() {
     }
     api.SetApp(router)
     apilog.Init()
+    calcom.InitApis()
     log.Fatal(
         http.ListenAndServeTLS(":1443",
             "/etc/sac/keys/cert.pem",

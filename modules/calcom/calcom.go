@@ -29,5 +29,5 @@ func FromContext(ctx context.Context) (data.ClockInfoPackage, bool) {
 }
 
 func InitApis() {
-	InitGoogleCalendarApi() /* TODO: move API methods to dict */
+	initGoogleCalendarApi() /* TODO: move API methods to dict */
 }
