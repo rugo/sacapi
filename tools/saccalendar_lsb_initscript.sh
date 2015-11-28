@@ -23,7 +23,7 @@ test -x $DAEMON || exit 0
 case "$1" in
   start)
 	log_daemon_msg "Starting saccalendar" "saccalendar"
-	start_daemon -p $PIDFILE $DAEMON &
+	start_daemon -p $PIDFILE $DAEMON
 	log_end_msg $?
     ;;
   stop)
