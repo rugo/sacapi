@@ -9,12 +9,10 @@ import (
 	"github.com/rugo/sacapi/modules/auth"
 	"github.com/rugo/sacapi/modules/data"
 	"time"
-	"errors"
 )
 
 var (
 	oauthConfig *oauth2.Config
-
 )
 
 func InitGoogleCalendarApi() {
