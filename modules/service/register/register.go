@@ -98,5 +98,5 @@ func main() {
 
     http.HandleFunc("/register", registerHandler)
     http.HandleFunc("/oauth2callback", oauthCallbackHandler)
-    Log.Fatal(http.ListenAndServeTLS(":2    443", keyDir + "cert.pem", keyDir + "key.pem", nil))
+    Log.Fatal(http.ListenAndServeTLS(":2443", keyDir + "cert.pem", keyDir + "key.pem", nil))
 }
