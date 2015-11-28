@@ -5,6 +5,7 @@ import (
     "strconv"
     "golang.org/x/net/context"
     "github.com/rugo/sacapi/modules/calcom"
+    . "github.com/rugo/sacapi/modules/apilog"
 )
 
 const (
@@ -36,6 +37,7 @@ func GetNextCalendarEntry(w rest.ResponseWriter, r *rest.Request) {
     ctx, err := calcom.GetNextGoogleCalendarEntry(ctx, deviceId)
 
     if err != nil {
+        Log.Error(err.Error())
         rest.Error(w, "Could not read calendar entries", ERROR_CODE)
         return
     }

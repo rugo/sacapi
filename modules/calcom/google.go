@@ -36,7 +36,7 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 	}
 
 	Log.Info("Using oauth config %s", oauthConfig.ClientID)
-	
+
 	client := oauthConfig.Client(oauth2.NoContext, token)
 	srv, err := calendar.New(client)
 
