@@ -1,5 +1,5 @@
 SOURCE=$(wildcard *.go)
-TARGET=register
+TARGET=calendar
 
 .PHONY=all clean
 
@@ -9,4 +9,4 @@ $(TARGET): $(SOURCE)
 	go build
 
 clean:
-	$(RM) $(TARGET) 
+	$(RM) $(TARGET)
