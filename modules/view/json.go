@@ -11,6 +11,7 @@ import (
 const (
     CONTENT_TYPE = "application/json; charset=utf-8"
     ERROR_CODE = 500 /* always return 500 if smth goes wrong here */
+    NO_APPOINTMENT_CODE = 404
 )
 func GetJSONMessage(w rest.ResponseWriter, r *rest.Request) {
     time, err := strconv.Atoi(r.PathParam("time"))
@@ -38,7 +39,11 @@ func GetNextCalendarEntry(w rest.ResponseWriter, r *rest.Request) {
 
     if err != nil {
         Log.Error(err.Error())
-        rest.Error(w, "Could not read calendar entries", ERROR_CODE)
+        if err = calcom.ErrNoAppointments {
+            rest.Error(w, "User has no upcomming events", NO_APPOINTMENT_CODE)
+        } else {
+            rest.Error(w, "Could not read calendar entries", ERROR_CODE)
+        }
         return
     }
 
