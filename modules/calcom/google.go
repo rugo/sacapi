@@ -67,6 +67,7 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 				Time: startTime.Unix(),
 				Name: entry.Summary,
 				Description: entry.Description,
+				Location: entry.Location,
 			},
 			Timezone: events.TimeZone,
 			Apivers: 0,
