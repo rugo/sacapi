@@ -25,6 +25,7 @@ func initGoogleCalendarApi() {
 	if err != nil {
 		Log.Fatalf("Unable to parse client secret file to config: %v", err)
 	}
+	Log.Info("Read Google API oauth config.")
 }
 
 func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.Context, error) {
@@ -34,6 +35,8 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 		return ctx, err
 	}
 
+	Log.Info("Using oauth config %s", oauthConfig.ClientID)
+	
 	client := oauthConfig.Client(oauth2.NoContext, token)
 	srv, err := calendar.New(client)
 
