@@ -39,7 +39,7 @@ func GetNextCalendarEntry(w rest.ResponseWriter, r *rest.Request) {
 
     if err != nil {
         Log.Error(err.Error())
-        if err = calcom.ErrNoAppointments {
+        if err == calcom.ErrNoAppointments {
             rest.Error(w, "User has no upcomming events", NO_APPOINTMENT_CODE)
         } else {
             rest.Error(w, "Could not read calendar entries", ERROR_CODE)
