@@ -40,9 +40,9 @@ func GetNextCalendarEntry(w rest.ResponseWriter, r *rest.Request) {
         return
     }
 
-    answer, err := calcom.FromContext(ctx)
+    answer, ok := calcom.FromContext(ctx)
 
-    if err != nil {
+    if !ok {
         /* should never be reached */
         rest.Error(w, "Could not access next calendar entry", ERROR_CODE)
     }
