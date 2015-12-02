@@ -83,9 +83,12 @@ func oauthCallbackHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-var keyDir = "/etc/sac/keys/"
+const(
+    KEY_DIR = "/etc/sac/keys/"
+    CONFIG_DIR = "/etc/sac/"
+)
 func main() {
-    b, err := ioutil.ReadFile("/tmp/google_api_secret.json")
+    b, err := ioutil.ReadFile(CONFIG_DIR + "google_api_secret.json")
     if err != nil {
         Log.Fatalf("Unable to read client secret file: %v", err)
     }
@@ -98,5 +101,5 @@ func main() {
 
     http.HandleFunc("/register", registerHandler)
     http.HandleFunc("/oauth2callback", oauthCallbackHandler)
-    Log.Fatal(http.ListenAndServeTLS(":2443", keyDir + "cert.pem", keyDir + "key.pem", nil))
+    Log.Fatal(http.ListenAndServeTLS(":2443", KEY_DIR + "cert.pem", KEY_DIR + "key.pem", nil))
 }
