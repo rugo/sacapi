@@ -55,6 +55,16 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 
 	if len(events.Items) > 0 {
 		entry := events.Items[0]
+        // Skip all day events
+        for _, i := range events.Items {
+            if entry.Start.DateTime != "" {
+                break;
+            }
+            entry = i
+        }
+        if entry.Start.DateTime == "" {
+            return ctx, ErrNoAppointments
+        }
 		startTime, err := time.Parse(time.RFC3339, entry.Start.DateTime)
 
 		if err != nil {
