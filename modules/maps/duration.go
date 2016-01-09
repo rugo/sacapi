@@ -36,7 +36,7 @@ func getDuration(ctx context.Context, origin, destination string) (time.Duration
 	c, err := maps.NewClient(maps.WithAPIKey(apiKey))
 
 	if err != nil {
-		Log.Fatalf("Could not create MAPS client %s", err)
+		Log.Error("Could not create MAPS client %s", err)
 		return time.Duration(0), err
 	}
 
@@ -47,7 +47,7 @@ func getDuration(ctx context.Context, origin, destination string) (time.Duration
 	resp, _, err := c.Directions(context.Background(), r)
 
 	if err != nil || len(resp) == 0 {
-		Log.Fatalf("Could not get directions for route %s to %s, err:%s", origin, destination, err)
+		Log.Error("Could not get directions for route %s to %s, err:%s", origin, destination, err)
 		return time.Duration(0), err
 	}
 
