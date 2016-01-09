@@ -29,7 +29,7 @@ func initGoogleCalendarApi() {
 }
 
 func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.Context, error) {
-    var bReminder int64 = 0; // the reminder with biggest minute amount
+    var bReminderMin int64 = 0; // the reminder with biggest minute amount
 	token, err := auth.LoadToken(deviceId)
 	if err != nil {
 		Log.Error("Could not load token for device %s", deviceId)
@@ -80,8 +80,8 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
         }
 
         for _, reminder := range reminders {
-            if reminder.Minutes > bReminder {
-                bReminder = reminder.Minutes
+            if reminder.Minutes > bReminderMin {
+                bReminderMin = reminder.Minutes
             }
         }
 		if err != nil {
@@ -91,7 +91,7 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 
 		ctx = NewContext(ctx,  data.ClockInfoPackage{
 			Appointment: data.Appointment{
-				Time: startTime.Unix() + bReminder,
+				Time: startTime.Unix() + bReminderMin * 60,
 				Name: entry.Summary,
 				Description: entry.Description,
 				Location: entry.Location,
