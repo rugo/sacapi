@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	API_KEY_FILE = "/tmp/maps_api_key"
+	API_KEY_FILE = "/etc/sac/maps_api_key"
 )
 var (
 	apiKey = ""
