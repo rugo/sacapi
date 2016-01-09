@@ -91,7 +91,7 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 
 		ctx = NewContext(ctx,  data.ClockInfoPackage{
 			Appointment: data.Appointment{
-				Time: startTime.Unix() + bReminderMin * 60,
+				Time: startTime.Unix() - bReminderMin * 60,
 				Name: entry.Summary,
 				Description: entry.Description,
 				Location: entry.Location,
