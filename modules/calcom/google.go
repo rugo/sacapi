@@ -8,6 +8,7 @@ import (
 	. "github.com/rugo/sacapi/modules/apilog"
 	"github.com/rugo/sacapi/modules/auth"
 	"github.com/rugo/sacapi/modules/data"
+	"github.com/rugo/sacapi/modules/maps"
 	"time"
 )
 
@@ -29,7 +30,12 @@ func initGoogleCalendarApi() {
 }
 
 func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.Context, error) {
-    var bReminderMin int64 = 0; // the reminder with biggest minute amount
+	mapsDone := make(chan bool, 1)  // for signaling when maps api call is done
+	var (
+		bReminderMin int64 = 0 // the offset to the appointment, calculated by reminders and distance
+		errMaps error = nil
+		durationMapsMins int64 = 0
+	)
 	token, err := auth.LoadToken(deviceId)
 	if err != nil {
 		Log.Error("Could not load token for device %s", deviceId)
@@ -56,16 +62,26 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 
 	if len(events.Items) > 0 {
 		entry := events.Items[0]
-        // Skip all day events
-        for _, i := range events.Items {
-            if entry.Start.DateTime != "" {
-                break;
-            }
-            entry = i
-        }
-        if entry.Start.DateTime == "" {
-            return ctx, ErrNoAppointments
-        }
+		// Skip all day events
+		for _, i := range events.Items {
+			if entry.Start.DateTime != "" {
+				break;
+			}
+			entry = i
+		}
+
+		if entry.Start.DateTime == "" {
+			return ctx, ErrNoAppointments
+		}
+		if entry.Location != "" {
+			go func() {
+				durationMapsMins, errMaps = maps.GetDurationMins(ctx, "Konstanz, Deutschland", entry.Location)
+				mapsDone <- true
+			}()
+		} else {
+			mapsDone <- true
+		}
+
 		startTime, err := time.Parse(time.RFC3339, entry.Start.DateTime)
         /* Get reminder times */
         reminders := entry.Reminders.Overrides
@@ -84,9 +100,20 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
                 bReminderMin = reminder.Minutes
             }
         }
+
 		if err != nil {
 			Log.Error("Could not parse time %s", entry.Start.DateTime)
 			return ctx, ErrCommunicationError
+		}
+
+		// Wait for Maps api answer
+		select {
+		case <-ctx.Done():
+			return ctx, ctx.Err()
+		case <- mapsDone:
+			if errMaps == nil {
+				bReminderMin = bReminderMin + durationMapsMins
+			}
 		}
 
 		ctx = NewContext(ctx,  data.ClockInfoPackage{
