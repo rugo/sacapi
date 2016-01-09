@@ -29,6 +29,7 @@ func initGoogleCalendarApi() {
 }
 
 func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.Context, error) {
+    var bReminder int64 = 0; // the reminder with biggest minute amount
 	token, err := auth.LoadToken(deviceId)
 	if err != nil {
 		Log.Error("Could not load token for device %s", deviceId)
@@ -44,7 +45,7 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 		Log.Error("Unable to retrieve calendar Client %v", err)
 		return ctx, err
 	}
-
+    
 	t := time.Now().Format(time.RFC3339)
 	events, err := srv.Events.List("primary").ShowDeleted(false).
 	SingleEvents(true).TimeMin(t).MaxResults(1).OrderBy("startTime").Do()
@@ -66,7 +67,23 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
             return ctx, ErrNoAppointments
         }
 		startTime, err := time.Parse(time.RFC3339, entry.Start.DateTime)
+        /* Get reminder times */
+        reminders := entry.Reminders.Overrides
+        // Default reminders (in case used)
+        if entry.Reminders.UseDefault {
+            calendarList, errList := srv.CalendarList.Get("primary").Do()
+            if errList != nil {
+                Log.Error("Unable to get CalendarList entry of primary")
+                return ctx, ErrCommunicationError
+            }
+            reminders = calendarList.DefaultReminders
+        }
 
+        for _, reminder := range reminders {
+            if reminder.Minutes > bReminder {
+                bReminder = reminder.Minutes
+            }
+        }
 		if err != nil {
 			Log.Error("Could not parse time %s", entry.Start.DateTime)
 			return ctx, ErrCommunicationError
@@ -74,7 +91,7 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 
 		ctx = NewContext(ctx,  data.ClockInfoPackage{
 			Appointment: data.Appointment{
-				Time: startTime.Unix(),
+				Time: startTime.Unix() + bReminder,
 				Name: entry.Summary,
 				Description: entry.Description,
 				Location: entry.Location,
