@@ -17,7 +17,7 @@ var (
 )
 
 const (
-	MAX_MAP_DURATION_TIME = 8 * 60  // Max offset used, in case appointment has location
+	MAX_MAP_DURATION_MINS = 8 * 60  // Max offset used, in case appointment has location
 	MAP_ORIGIN = "Konstanz, Deutschland" // This is just for testing, will be replaced by geolocation stuff
 )
 func initGoogleCalendarApi() {
@@ -115,7 +115,7 @@ func GetNextGoogleCalendarEntry(ctx context.Context, deviceId string) (context.C
 		case <-ctx.Done():
 			return ctx, ctx.Err()
 		case <- mapsDone:
-			if errMaps == nil && durationMapsMins * time.Minute < MAX_MAP_DURATION_TIME {
+			if errMaps == nil && durationMapsMins < MAX_MAP_DURATION_MINS {
 				bReminderMin = bReminderMin + durationMapsMins
 			}
 		}
